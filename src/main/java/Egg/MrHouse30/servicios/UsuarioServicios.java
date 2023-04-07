@@ -43,22 +43,22 @@ public class UsuarioServicios implements UserDetailsService {
 
     //Crear Usuario
     @Transactional
-    public void registrar(MultipartFile archivo, String nombre, String email, String password, String password2, Roles rol) throws MyException {
+    public void registrar(MultipartFile archivo, String nombre, String email, String password, String password2, Roles rol, boolean isInmobiliaria) throws MyException {
 
-        validar(nombre, email, password, password2, archivo);
+        validar(nombre, email, password, password2, archivo, isInmobiliaria);
 
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setEmail(email);
         usuario.setPassword(new BCryptPasswordEncoder().encode(password));
-        usuario.setRol(rol);
+        usuario.setRol(rol != null ? rol : Roles.USUARIO); // Asignar el rol por defecto si no se recibió un valor
         Foto foto = fotoservicios.save(archivo);
         usuario.setFoto(foto);
 
         usuarioRepositorio.save(usuario);
     }
 
-    private void validar(String nombre, String email, String password, String password2, MultipartFile archivo) throws MyException {
+    private void validar(String nombre, String email, String password, String password2, MultipartFile archivo, boolean isInmobiliaria) throws MyException {
         if (nombre.isEmpty() || nombre == null) {
             throw new MyException("El nombre no puede ser nulo o estar vacio");
         }
@@ -81,16 +81,18 @@ public class UsuarioServicios implements UserDetailsService {
         } catch (IOException ex) {
             throw new MyException("Error al leer el archivo de imagen: " + ex.getMessage());
         }
+        if (!(isInmobiliaria == true || isInmobiliaria == false)) {
+            throw new MyException("Debe específicar si desea crear una cuenta de tipo inmobiliaria o usuario por defecto.");
+        }
 
     }
-//se borrro parametro Multipart
 
     @Transactional
     public void modificar(MultipartFile archivo, String id,
-             String nombre, String email,
-             String password, String password2) throws MyException {
+            String nombre, String email,
+            String password, String password2, boolean isInmobiliaria) throws MyException {
 
-        validar(nombre, email, password, password2, archivo);
+        validar(nombre, email, password, password2, archivo, isInmobiliaria);
 
         Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
         if (respuesta.isPresent()) {

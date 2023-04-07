@@ -10,7 +10,7 @@ package Egg.MrHouse30.enums;
  * @author Ramiro
  */
 public enum Roles {
-    INQUILINO,
+    USUARIO,
     INMOBILIARIA,
     PROPIETARIO,
     ADMIN;

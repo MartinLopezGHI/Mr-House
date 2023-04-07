@@ -32,5 +32,5 @@ public interface PublicacionRepositorio extends JpaRepository<Publicacion, Strin
     List<Publicacion> buscaActivos(@Param("activos") String activos);
 
     @Query("SELECT p FROM Publicacion p WHERE p.propiedadTipo = :tipoPropiedad AND p.transaccionPropiedad = :transaccionPropiedad AND p.provincias = :provincias AND p.precio BETWEEN :precioMin AND :precioMax")
-    List<Publicacion> buscarPropiedades(@Param("tipoPropiedad") String tipoPropiedad, @Param("transaccionPropiedad") String transaccionPropiedad, @Param("provincias") String provincias, @Param("precioMin") Double precioMin, @Param("precioMax") Double precioMax);
+    List<Publicacion> buscarPublicaciones(@Param("tipoPropiedad") String tipoPropiedad, @Param("transaccionPropiedad") String transaccionPropiedad, @Param("provincias") String provincias, @Param("precioMin") Double precioMin, @Param("precioMax") Double precioMax);
 }
